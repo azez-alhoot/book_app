@@ -22,6 +22,10 @@ server.use(express.static('./public'));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
+server.get('/', (req, res) => {
+    res.render('pages/index');
+});
+
 server.get('/hello', (req, res) => {
     res.render('pages/index');
 });
