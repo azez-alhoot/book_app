@@ -106,3 +106,8 @@ div img{
     height: 310px;
 }    
 }
+
+/* book form  */
+.hide {
+    display: none;
+}
