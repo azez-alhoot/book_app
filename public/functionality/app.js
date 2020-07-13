@@ -18,4 +18,8 @@ $( document ).ready(function() {
     });
     });
     
+    $('.hide-show').click(() =>{
+        $('.hide').toggle();
+    })
+
     });
