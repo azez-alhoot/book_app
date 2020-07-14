@@ -17,9 +17,9 @@ $( document ).ready(function() {
     $( ".hamburger" ).show();
     });
     });
-    
+
     $('.hide-show').click(() =>{
-        $('.hide').toggle();
-    })
+        $(this.activeElement).next().toggle();
+    });
 
     });

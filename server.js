@@ -3,7 +3,7 @@
 require('dotenv').config();
 
 const pg = require('pg');
-
+const methodOverride = require('method-override');
 const express = require('express');
 
 const client = new pg.Client(process.env.DATABASE_URL)
@@ -19,7 +19,7 @@ const superagent = require('superagent');
 
 const server = express();
 server.use(cors());
-
+server.use(methodOverride('_method'));
 server.set('view engine', 'ejs');
 
 
@@ -84,7 +84,7 @@ function Book(book) {
     this.description = book.volumeInfo.description;
     this.isbn = book.volumeInfo.industryIdentifiers?`ISBN_13${book.volumeInfo.industryIdentifiers[0].identifier}`: "no isbn";
         console.log('this isbn',this.isbn);
-        this.bookshelf = book.volumeInfo.categories ?
+        this.book_shelf = book.volumeInfo.categories ?
         book.volumeInfo.categories :"no bookshelf sorry";
 }
 
@@ -112,6 +112,27 @@ server.get('/books/:id', (req, res) => {
         .then(result => {
             res.render('pages/books/detail', { book: result.rows[0]});
         })
+});
+
+server.put('/updateBook/:id',(req,res) =>{
+    let {img_url,title,author,description,isbn,book_shelf} = req.body;
+    let SQL = `UPDATE books SET img_url=$1,title=$2,author=$3,description=$4,isbn=$5,book_shelf=$6 WHERE id =$7`
+    let id = req.params.id;
+    let values = [img_url,title,author,description,isbn,book_shelf,id];
+    client.query(SQL,values)
+        .then(()=>{
+            res.redirect(`/books/${id}`);
+        });
+});
+
+server.delete('/deleteBook/:id',(req,res) => {
+    let SQL = `DELETE FROM books WHERE id=$1;`;
+    let values = [req.params.id];
+    client.query(SQL,values)
+        .then(()=>{
+            res.redirect('/');
+        });
+
 });
 
 client.connect()
